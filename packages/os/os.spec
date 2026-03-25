@@ -143,16 +143,16 @@ Requires: %{_cross_os}apiclient(binaries)
 %package -n %{_cross_os}apiclient-bin
 Summary: Bottlerocket API client binaries
 Provides: %{_cross_os}apiclient(binaries)
-Requires: (%{_cross_os}image-feature(no-fips) and %{_cross_os}apiclient)
-Conflicts: (%{_cross_os}image-feature(fips) or %{_cross_os}apiclient-fips-bin)
+Requires: ((%{_cross_os}image-feature(no-fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}apiclient)
+Conflicts: %{_cross_os}image-feature(fips)
 %description -n %{_cross_os}apiclient-bin
 %{summary}.
 
 %package -n %{_cross_os}apiclient-fips-bin
 Summary: Bottlerocket API client binaries, FIPS edition
 Provides: %{_cross_os}apiclient(binaries)
-Requires: (%{_cross_os}image-feature(fips) and %{_cross_os}apiclient)
-Conflicts: (%{_cross_os}image-feature(no-fips) or %{_cross_os}apiclient-bin)
+Requires: ((%{_cross_os}image-feature(fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}apiclient)
+Conflicts: (%{_cross_os}image-feature(no-fips) and %{_cross_os}image-feature(no-runtime-fips))
 %description -n %{_cross_os}apiclient-fips-bin
 %{summary}.
 
@@ -210,18 +210,18 @@ Requires: %{_cross_os}migration(binaries)
 %package -n %{_cross_os}migration-bin
 Summary: Binaries to migrate version formats
 Provides: %{_cross_os}migration(binaries)
-Requires: (%{_cross_os}image-feature(no-fips) and %{_cross_os}migration)
+Requires: ((%{_cross_os}image-feature(no-fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}migration)
 Conflicts: %{_cross_os}image-feature(no-in-place-updates)
-Conflicts: (%{_cross_os}image-feature(fips) or %{_cross_os}migration-fips-bin)
+Conflicts: %{_cross_os}image-feature(fips)
 %description -n %{_cross_os}migration-bin
 %{summary}.
 
 %package -n %{_cross_os}migration-fips-bin
 Summary: Binaries to migrate version formats, FIPS edition
 Provides: %{_cross_os}migration(binaries)
-Requires: (%{_cross_os}image-feature(fips) and %{_cross_os}migration)
+Requires: ((%{_cross_os}image-feature(fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}migration)
 Conflicts: %{_cross_os}image-feature(no-in-place-updates)
-Conflicts: (%{_cross_os}image-feature(no-fips) or %{_cross_os}migration-bin)
+Conflicts: (%{_cross_os}image-feature(no-fips) and %{_cross_os}image-feature(no-runtime-fips))
 %description -n %{_cross_os}migration-fips-bin
 %{summary}.
 
@@ -251,18 +251,18 @@ not much what's up with you
 %package -n %{_cross_os}updog-bin
 Summary: Bottlerocket updater CLI binaries
 Provides: %{_cross_os}updog(binaries)
-Requires: (%{_cross_os}image-feature(no-fips) and %{_cross_os}updog)
+Requires: ((%{_cross_os}image-feature(no-fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}updog)
 Conflicts: %{_cross_os}image-feature(no-in-place-updates)
-Conflicts: %{_cross_os}image-feature(fips) or %{_cross_os}updog-fips-bin
+Conflicts: %{_cross_os}image-feature(fips)
 %description -n %{_cross_os}updog-bin
 %{summary}.
 
 %package -n %{_cross_os}updog-fips-bin
 Summary: Bottlerocket updater CLI binaries, FIPS edition
 Provides: %{_cross_os}updog(binaries)
-Requires: (%{_cross_os}image-feature(fips) and %{_cross_os}updog)
+Requires: ((%{_cross_os}image-feature(fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}updog)
 Conflicts: %{_cross_os}image-feature(no-in-place-updates)
-Conflicts: %{_cross_os}image-feature(no-fips) or %{_cross_os}updog-bin
+Conflicts: (%{_cross_os}image-feature(no-fips) and %{_cross_os}image-feature(no-runtime-fips))
 %description -n %{_cross_os}updog-fips-bin
 %{summary}.
 
@@ -275,16 +275,16 @@ Requires: %{_cross_os}metricdog(binaries)
 %package -n %{_cross_os}metricdog-bin
 Summary: Bottlerocket health metrics sender binaries
 Provides: %{_cross_os}metricdog(binaries)
-Requires: (%{_cross_os}image-feature(no-fips) and %{_cross_os}metricdog)
-Conflicts: (%{_cross_os}image-feature(fips) or %{_cross_os}metricdog-fips-bin)
+Requires: ((%{_cross_os}image-feature(no-fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}metricdog)
+Conflicts: %{_cross_os}image-feature(fips)
 %description -n %{_cross_os}metricdog-bin
 %{summary}.
 
 %package -n %{_cross_os}metricdog-fips-bin
 Summary: Bottlerocket health metrics sender binaries, FIPS edition
 Provides: %{_cross_os}metricdog(binaries)
-Requires: (%{_cross_os}image-feature(fips) and %{_cross_os}metricdog)
-Conflicts: (%{_cross_os}image-feature(no-fips) or %{_cross_os}metricdog-bin)
+Requires: ((%{_cross_os}image-feature(fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}metricdog)
+Conflicts: (%{_cross_os}image-feature(no-fips) and %{_cross_os}image-feature(no-runtime-fips))
 %description -n %{_cross_os}metricdog-fips-bin
 %{summary}.
 
@@ -297,16 +297,16 @@ Requires: %{_cross_os}logdog(binaries)
 %package -n %{_cross_os}logdog-bin
 Summary: Bottlerocket log extractor binaries
 Provides: %{_cross_os}logdog(binaries)
-Requires: (%{_cross_os}image-feature(no-fips) and %{_cross_os}logdog)
-Conflicts: (%{_cross_os}image-feature(fips) or %{_cross_os}logdog-fips-bin)
+Requires: ((%{_cross_os}image-feature(no-fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}logdog)
+Conflicts: %{_cross_os}image-feature(fips)
 %description -n %{_cross_os}logdog-bin
 %{summary}.
 
 %package -n %{_cross_os}logdog-fips-bin
 Summary: Bottlerocket log extractor binaries, FIPS edition
 Provides: %{_cross_os}logdog(binaries)
-Requires: (%{_cross_os}image-feature(fips) and %{_cross_os}logdog)
-Conflicts: (%{_cross_os}image-feature(no-fips) or %{_cross_os}logdog-bin)
+Requires: ((%{_cross_os}image-feature(fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}logdog)
+Conflicts: (%{_cross_os}image-feature(no-fips) and %{_cross_os}image-feature(no-runtime-fips))
 %description -n %{_cross_os}logdog-fips-bin
 %{summary}.
 
@@ -331,16 +331,16 @@ Requires: %{_cross_os}pluto(binaries)
 %package -n %{_cross_os}pluto-bin
 Summary: Dynamic setting generator for kubernetes binaries
 Provides: %{_cross_os}pluto(binaries)
-Requires: (%{_cross_os}image-feature(no-fips) and %{_cross_os}pluto)
-Conflicts: (%{_cross_os}image-feature(fips) or %{_cross_os}pluto-fips-bin)
+Requires: ((%{_cross_os}image-feature(no-fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}pluto)
+Conflicts: %{_cross_os}image-feature(fips)
 %description -n %{_cross_os}pluto-bin
 %{summary}.
 
 %package -n %{_cross_os}pluto-fips-bin
 Summary: Dynamic setting generator for kubernetes binaries, FIPS edition
 Provides: %{_cross_os}pluto(binaries)
-Requires: (%{_cross_os}image-feature(fips) and %{_cross_os}pluto)
-Conflicts: (%{_cross_os}image-feature(no-fips) or %{_cross_os}pluto-bin)
+Requires: ((%{_cross_os}image-feature(fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}pluto)
+Conflicts: (%{_cross_os}image-feature(no-fips) and %{_cross_os}image-feature(no-runtime-fips))
 %description -n %{_cross_os}pluto-fips-bin
 %{summary}.
 
@@ -364,16 +364,16 @@ Requires: %{_cross_os}cfsignal(binaries)
 %package -n %{_cross_os}cfsignal-bin
 Summary: Bottlerocket CloudFormation Stack signaler binaries
 Provides: %{_cross_os}cfsignal(binaries)
-Requires: (%{_cross_os}image-feature(no-fips) and %{_cross_os}cfsignal)
-Conflicts: (%{_cross_os}image-feature(fips) or %{_cross_os}cfsignal-fips-bin)
+Requires: ((%{_cross_os}image-feature(no-fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}cfsignal)
+Conflicts: %{_cross_os}image-feature(fips)
 %description -n %{_cross_os}cfsignal-bin
 %{summary}.
 
 %package -n %{_cross_os}cfsignal-fips-bin
 Summary: Bottlerocket CloudFormation Stack signaler binaries, FIPS edition
 Provides: %{_cross_os}cfsignal(binaries)
-Requires: (%{_cross_os}image-feature(fips) and %{_cross_os}cfsignal)
-Conflicts: (%{_cross_os}image-feature(no-fips) or %{_cross_os}cfsignal-bin)
+Requires: ((%{_cross_os}image-feature(fips) or %{_cross_os}image-feature(runtime-fips)) and %{_cross_os}cfsignal)
+Conflicts: (%{_cross_os}image-feature(no-fips) and %{_cross_os}image-feature(no-runtime-fips))
 %description -n %{_cross_os}cfsignal-fips-bin
 %{summary}.
 
@@ -399,7 +399,7 @@ Conflicts: %{_cross_os}image-feature(no-host-containers)
 Summary: Compliance check framework
 Requires: (%{_cross_os}bloodhound-k8s if %{_cross_os}variant-runtime(k8s))
 Requires: (%{_cross_os}bloodhound-k8s-overrides if %{_cross_os}variant-runtime(k8s))
-Requires: (%{_cross_os}bloodhound-fips if %{_cross_os}image-feature(fips))
+Requires: (%{_cross_os}bloodhound-fips if (%{_cross_os}image-feature(fips) or %{_cross_os}image-feature(runtime-fips)))
 %description -n %{_cross_os}bloodhound
 %{summary}.
 
@@ -417,7 +417,7 @@ Requires: (%{_cross_os}bloodhound and %{_cross_os}variant-runtime(k8s))
 
 %package -n %{_cross_os}bloodhound-fips
 Summary: Compliance checks for FIPS
-Requires: (%{_cross_os}bloodhound and %{_cross_os}image-feature(fips))
+Requires: (%{_cross_os}bloodhound and (%{_cross_os}image-feature(fips) or %{_cross_os}image-feature(runtime-fips)))
 %description -n %{_cross_os}bloodhound-fips
 %{summary}.
 

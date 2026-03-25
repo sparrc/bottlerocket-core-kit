@@ -1,0 +1,13 @@
+[Unit]
+Description=Create FIPS system marker
+DefaultDependencies=no
+ConditionKernelCommandLine=fips=1
+Before=sysinit.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/touch /etc/system-fips
+RemainAfterExit=true
+
+[Install]
+WantedBy=sysinit.target

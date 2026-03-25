@@ -9,6 +9,7 @@ Summary: The basic directory layout
 License: Apache-2.0 OR MIT
 URL: https://github.com/bottlerocket-os/bottlerocket
 Requires: (%{name}-fips if %{_cross_os}image-feature(fips))
+Requires: (%{name}-runtime-fips if %{_cross_os}image-feature(runtime-fips))
 
 %description
 %{summary}.
@@ -19,6 +20,15 @@ Requires: (%{_cross_os}image-feature(fips) and %{name})
 Conflicts: %{_cross_os}image-feature(no-fips)
 
 %description fips
+%{summary}.
+
+%package runtime-fips
+Summary: The FIPS directory layout for runtime FIPS images
+Requires: (%{_cross_os}image-feature(runtime-fips) and %{name})
+Conflicts: %{_cross_os}image-feature(no-runtime-fips)
+Conflicts: %{_cross_os}image-feature(fips)
+
+%description runtime-fips
 %{summary}.
 
 %prep
@@ -87,6 +97,11 @@ ln -s .%{_sbindir} %{buildroot}/sbin
 %exclude %{_cross_fips_libexecdir}
 
 %files fips
+%dir %{_cross_prefix}/fips
+%{_cross_fips_bindir}
+%{_cross_fips_libexecdir}
+
+%files runtime-fips
 %dir %{_cross_prefix}/fips
 %{_cross_fips_bindir}
 %{_cross_fips_libexecdir}

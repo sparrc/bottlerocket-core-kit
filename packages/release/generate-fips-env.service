@@ -1,0 +1,13 @@
+[Unit]
+Description=Generate FIPS Go environment
+DefaultDependencies=no
+Before=sysinit.target
+ConditionKernelCommandLine=fips=1
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'echo "GODEBUG=fips140=on" > /run/fips-go.env'
+RemainAfterExit=true
+
+[Install]
+WantedBy=sysinit.target

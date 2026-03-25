@@ -126,6 +126,13 @@ Source1400: logdog.common.conf
 # bootconfig snippets.
 Source1500: bootconfig-fips.conf
 
+# Runtime FIPS sources.
+Source1700: generate-fips-env.service
+Source1701: create-fips-marker.service
+Source1702: runtime-fips-go.conf
+Source1703: usr-bin-runtime-fips.mount.in
+Source1704: usr-libexec-runtime-fips.mount.in
+
 # TPM2-related services.
 Source1600: encrypt-datastore.service
 Source1601: encrypt-local-fs.service
@@ -178,6 +185,7 @@ Requires: %{_cross_os}systemd
 Requires: %{_cross_os}util-linux
 Requires: %{_cross_os}xfsprogs
 Requires: (%{name}-fips if %{_cross_os}image-feature(fips))
+Requires: (%{name}-runtime-fips if %{_cross_os}image-feature(runtime-fips))
 Requires: (%{name}-crypt if %{_cross_os}image-feature(encrypted-storage))
 
 %description
@@ -200,10 +208,22 @@ Requires: %{_cross_os}rottweiler
 %description crypt
 %{summary}.
 
+%package runtime-fips
+Summary: Bottlerocket release, runtime FIPS edition
+Requires: (%{_cross_os}image-feature(runtime-fips) and %{name})
+Conflicts: %{_cross_os}image-feature(no-runtime-fips)
+Conflicts: %{_cross_os}image-feature(fips)
+Requires: %{_cross_os}libkcapi
+
+%description runtime-fips
+%{summary}. Ships all FIPS components but does not activate them by default.
+FIPS mode is activated at runtime by setting fips=1 on the kernel command line.
+
 %package swap
 Summary: Bottlerocket release, with zram-based swap
 Requires: %{name}
 Requires: (%{name}-fips if %{_cross_os}image-feature(fips))
+Requires: (%{name}-runtime-fips if %{_cross_os}image-feature(runtime-fips))
 
 %description swap
 %{summary}.
@@ -371,6 +391,21 @@ install -p -m 0644 %{S:1400} %{buildroot}%{_cross_datadir}/logdog.d
 install -d %{buildroot}%{_cross_bootconfigdir}
 install -p -m 0644 %{S:1500} %{buildroot}%{_cross_bootconfigdir}/10-fips.conf
 
+# Runtime FIPS: install conditional services and drop-ins.
+install -p -m 0644 %{S:1700} %{S:1701} %{buildroot}%{_cross_unitdir}
+install -p -m 0644 %{S:1702} %{buildroot}%{_cross_unitdir}/service.d/00-runtime-fips-go.conf
+
+# Runtime FIPS: conditional overlay mounts for FIPS binaries.
+# These use ConditionKernelCommandLine=fips=1 so they only activate when
+# the user has set the fips kernel parameter.
+BINDIRPATH=$(systemd-escape --path %{_cross_bindir})
+sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:1703} > ${BINDIRPATH}-runtime-fips.mount
+install -p -m 0644 ${BINDIRPATH}-runtime-fips.mount %{buildroot}%{_cross_unitdir}
+
+LIBEXECDIRPATH=$(systemd-escape --path %{_cross_libexecdir})
+sed -e 's|PREFIX|%{_cross_prefix}|g' %{S:1704} > ${LIBEXECDIRPATH}-runtime-fips.mount
+install -p -m 0644 ${LIBEXECDIRPATH}-runtime-fips.mount %{buildroot}%{_cross_unitdir}
+
 install -d %{buildroot}%{_cross_unitdir}/prepare-local-fs.service.d
 install -p -m 0644 %{S:1650} %{buildroot}%{_cross_unitdir}/prepare-local-fs.service.d/10-encrypted.conf
 
@@ -480,6 +515,22 @@ ln -s preconfigured.target %{buildroot}%{_cross_unitdir}/default.target
 %{_cross_unitdir}/service.d/00-fips-go.conf
 %{_cross_unitdir}/*-bin.mount
 %{_cross_unitdir}/*-libexec.mount
+%{_cross_unitdir}/fipscheck.target
+%{_cross_unitdir}/activate-preconfigured.service
+%{_cross_unitdir}/check-kernel-integrity.service
+%{_cross_unitdir}/check-fips-modules.service
+%dir %{_cross_unitdir}/check-fips-modules.service.d
+%{_cross_unitdir}/fips-modprobe@.service
+
+%files runtime-fips
+# Conditional Go FIPS environment — only populates /run/fips-go.env when fips=1
+%{_cross_unitdir}/service.d/00-runtime-fips-go.conf
+%{_cross_unitdir}/generate-fips-env.service
+# Conditional FIPS marker — only creates /etc/system-fips when fips=1
+%{_cross_unitdir}/create-fips-marker.service
+# Conditional overlay mounts — only activate when fips=1 is on kernel command line
+%{_cross_unitdir}/*-runtime-fips.mount
+# FIPS integrity check target and services (already have ConditionKernelCommandLine=fips=1)
 %{_cross_unitdir}/fipscheck.target
 %{_cross_unitdir}/activate-preconfigured.service
 %{_cross_unitdir}/check-kernel-integrity.service
