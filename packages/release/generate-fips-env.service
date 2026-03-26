@@ -6,7 +6,7 @@ ConditionKernelCommandLine=fips=1
 
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c 'echo "GODEBUG=fips140=on" > /run/fips-go.env'
+ExecStart=/usr/bin/cp /usr/share/bottlerocket/fips-go.env /run/fips-go.env
 RemainAfterExit=true
 
 [Install]
